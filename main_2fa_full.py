@@ -78,11 +78,12 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_m
 @app.on_event("startup")
 async def on_startup():
     webhook_url = os.getenv("WEBHOOK_URL")
-    await application.initialize()  # <- Dòng quan trọng giúp bot hoạt động
+    await application.initialize()
     await application.bot.set_webhook(webhook_url)
 
 @app.post("/")
 async def webhook(req: Request):
     data = await req.json()
-    await application.update_queue.put(Update.de_json(data, application.bot))
+    update = Update.de_json(data, application.bot)
+    await application.process_update(update)  # ✅ xử lý trực tiếp
     return {"ok": True}
