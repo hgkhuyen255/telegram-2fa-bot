@@ -78,6 +78,7 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_m
 @app.on_event("startup")
 async def on_startup():
     webhook_url = os.getenv("WEBHOOK_URL")
+    await application.initialize()  # <- Dòng quan trọng giúp bot hoạt động
     await application.bot.set_webhook(webhook_url)
 
 @app.post("/")
