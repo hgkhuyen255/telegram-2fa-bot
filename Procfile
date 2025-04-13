@@ -1,1 +1,1 @@
-web: uvicorn main_2fa_full:app --host 0.0.0.0 --port 8080
+web: uvicorn main_2fa_full:app --host 0.0.0.0 --port 10000

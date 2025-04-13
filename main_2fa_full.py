@@ -77,10 +77,10 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_m
 
 @app.on_event("startup")
 async def on_startup():
-    webhook_url = os.getenv("WEBHOOK_URL") + "/" + BOT_TOKEN
+    webhook_url = os.getenv("WEBHOOK_URL")
     await application.bot.set_webhook(webhook_url)
 
-@app.post(f"/{BOT_TOKEN}")
+@app.post("/")
 async def webhook(req: Request):
     data = await req.json()
     await application.update_queue.put(Update.de_json(data, application.bot))
