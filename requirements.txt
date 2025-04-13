@@ -1,5 +1,5 @@
 python-telegram-bot==20.3
+python-dotenv
+pyotp
 fastapi
 uvicorn
-pyotp
-python-dotenv

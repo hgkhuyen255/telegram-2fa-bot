@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI()
 
-# --- Load & lưu secrets ---
+# Load secrets
 secrets = {}
 if os.path.exists("secrets.json"):
     with open("secrets.json", "r") as f:
@@ -18,9 +18,9 @@ def save_secrets():
     with open("secrets.json", "w") as f:
         json.dump(secrets, f)
 
-# --- Lệnh ---
+# Commands
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👋 Gửi email để nhận mã 2FA.\nDùng: /add, /edit, /delete")
+    await update.message.reply_text("👋 Gửi email để nhận mã 2FA. Dùng /add, /edit, /delete.")
 
 async def add(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
@@ -55,20 +55,18 @@ async def delete(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except:
         await update.message.reply_text("⚠️ Sai cú pháp. Dùng: /delete email")
 
-# --- Xử lý chat bất kỳ ---
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     if text in secrets:
         try:
             code = pyotp.TOTP(secrets[text]).now()
             await update.message.reply_text(f"🔐 Mã 2FA: `{code}`", parse_mode="Markdown")
-        except Exception as e:
-            print("❗ TOTP error:", e)
+        except:
             await update.message.reply_text("❌ Lỗi khi tạo mã.")
     else:
         await update.message.reply_text("❌ Không tìm thấy email trong hệ thống.")
 
-# --- Khởi tạo bot & webhook ---
+# Setup bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 application = ApplicationBuilder().token(BOT_TOKEN).build()
 application.add_handler(CommandHandler("start", start))
